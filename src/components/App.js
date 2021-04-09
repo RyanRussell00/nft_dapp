@@ -28,6 +28,7 @@ class App extends Component {
         this.setState({account: accounts[0]})
 
         const networkId = await web3.eth.net.getId()
+        console.log("NetworkId: ", networkId);
         const networkData = Color.networks[networkId]
         if (networkData) {
             const abi = Color.abi
@@ -70,6 +71,21 @@ class App extends Component {
             });
     }
 
+    async addExistingToken(tokenId) {
+        console.log("Started ownerOf: ", tokenId)
+        const owner = await this.state.contract.methods.ownerOf(tokenId).call()
+        console.log("owner: ", owner);
+        // this.state.contract.methods.ownerOf(tokenId).send(
+        //     {from: this.state.account}
+        // ).then((receipt) => {
+        //     console.log("Receipt. Owner is: " + receipt);
+        // })
+    }
+
+    transfer = (to, tokenId) => {
+
+    }
+
     render() {
         return (
             <div>
@@ -107,6 +123,24 @@ class App extends Component {
                                         type="submit"
                                         className="btn btn-primary btn-block"
                                         value="MINT"/>
+                                </form>
+                                <hr/>
+                                <form onSubmit={(event) => {
+                                    event.preventDefault();
+                                    const token = this.inputTokenId.value;
+                                    this.addExistingToken(token);
+                                }}>
+                                    <input
+                                        type="text"
+                                        className="form-control mb-1"
+                                        placeholder="Enter Existing Token ID"
+                                        ref={(input) => {
+                                            this.inputTokenId = input
+                                        }}/>
+                                    <input
+                                        type="submit"
+                                        className="btn btn-primary btn-block"
+                                        value="Add Existing Token"/>
                                 </form>
                             </div>
                         </main>

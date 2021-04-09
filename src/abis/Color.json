@@ -1827,6 +1827,10 @@
       "links": {},
       "address": "0x2109Cb3383277C99C6760B68A9c31412EFBeE0af",
       "transactionHash": "0xdbc85a74738f06f5d0d7fe956a0d1d698756f23dd617ca222b38e6dbc4ce5dde"
+    },
+    "3": {
+      "address": "0x5709E7Ea654B521544F7999d23F0785900bd3887",
+      "transactionHash": "0x9258495694fb1027d862a58a08d7c6c9e8fca6ecc40633d9f79bd9a91846520c"
     }
   },
   "schemaVersion": "3.0.2",
