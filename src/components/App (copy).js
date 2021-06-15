@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import Web3 from "web3";
-
-const contract = require("../abis/MyEyesOnlyContract.json");
-const contractAddress = "0xf1c5d83B830e3FA7B832E887633614165991c753"; // Get from the deployment of the NFT
+import Color from "../abis/MyEyesOnlyContract.json";
 
 class App extends Component {
 
@@ -25,34 +23,30 @@ class App extends Component {
 
     async loadBlockchain() {
         const web3 = window.web3
-
         // Load account
         const accounts = await web3.eth.getAccounts()
         this.setState({account: accounts[0]})
 
-        const nftContract = new web3.eth.Contract(contract.abi, contractAddress);
-        this.setState({contract: nftContract});
-
-        // const networkId = await web3.eth.net.getId()
-        // console.log("NetworkId: ", networkId);
-        // const networkData = Color.networks[networkId]
-        // if (networkData) {
-        //     const abi = Color.abi
-        //     const address = networkData.address
-        //     const contract = new web3.eth.Contract(abi, address)
-        //     this.setState({contract})
-        //     const totalSupply = await contract.methods.totalSupply().call()
-        //     this.setState({totalSupply})
-        //     // Load Colors
-        //     for (var i = 1; i <= totalSupply; i++) {
-        //         const color = await contract.methods.colors(i - 1).call()
-        //         this.setState({
-        //             colors: [...this.state.colors, color]
-        //         })
-        //     }
-        // } else {
-        //     window.alert('Smart contract not deployed to detected network.')
-        // }
+        const networkId = await web3.eth.net.getId()
+        console.log("NetworkId: ", networkId);
+        const networkData = Color.networks[networkId]
+        if (networkData) {
+            const abi = Color.abi
+            const address = networkData.address
+            const contract = new web3.eth.Contract(abi, address)
+            this.setState({contract})
+            const totalSupply = await contract.methods.totalSupply().call()
+            this.setState({totalSupply})
+            // Load Colors
+            for (var i = 1; i <= totalSupply; i++) {
+                const color = await contract.methods.colors(i - 1).call()
+                this.setState({
+                    colors: [...this.state.colors, color]
+                })
+            }
+        } else {
+            window.alert('Smart contract not deployed to detected network.')
+        }
     }
 
     constructor(props) {
@@ -67,16 +61,10 @@ class App extends Component {
 
     mint = (color) => {
         // Use send() to send transaction to blockchain
-        // this.state.contract.methods.mint(color)
-
-        const recipient = this.state.account;
-        const tokenJSON = "https://gateway.pinata.cloud/ipfs/QmajTHGeY7kjB7vEJTa4dMjaY1QFNauBtNJn3XaEyTks2Z";
-
-        this.state.contract.methods.mintNFT(recipient, tokenJSON).send(
+        this.state.contract.methods.mint(color).send(
             {from: this.state.account}
         )
             .once('receipt', (receipt) => {
-                console.log("Receipt: ", receipt)
                 this.setState({
                     colors: [this.state.colors, color]
                 });
@@ -200,7 +188,6 @@ class App extends Component {
                                         className="btn btn-primary btn-block"
                                         value="Transfer"/>
                                 </form>
-                                <hr/>
                             </div>
                         </main>
                     </div>

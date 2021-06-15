@@ -6,7 +6,6 @@ require('chai')
     .use(require('chai-as-promised'))
     .should();
 
-
 // A Test that has a callback function that takes a single argument:
 // accounts. The accounts are from Ganache
 contract('Color', (accounts) => {
